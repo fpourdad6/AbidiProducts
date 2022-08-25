@@ -22,9 +22,10 @@ namespace AbidiProducts.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Index(ProductViewModel productViewModel)
+        public IActionResult Index(UnitViewModel unitViewModel)
+
         {
-            return View(productViewModel);
+            return View(unitViewModel);
         }
 
         [HttpPost]
@@ -38,6 +39,7 @@ namespace AbidiProducts.Controllers
             addUnitAppService.Execute(requestDto);
             return Redirect("Index");
         }
+
         [HttpPut]
         public IActionResult UpdateUnit(int id)
         {

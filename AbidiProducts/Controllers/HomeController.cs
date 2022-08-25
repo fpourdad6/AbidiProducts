@@ -18,6 +18,7 @@ namespace AbidiProducts.Controllers
             this._productRepo = productRepo;
             this._unitRepository = unitRepository;
         }
+        [HttpGet]
         public IActionResult Index()
         {
             var units = _productDbContext.Units.ToList();
@@ -25,6 +26,20 @@ namespace AbidiProducts.Controllers
             var products = _productDbContext.Products.ToList();
             ViewBag.Products = products;
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Index(string productCode,string productName ,int qty ,int unitId) //ذخیره سازی اطلاعات
+        {
+            var viewModel = new ProductViewModel
+            {
+                ProductCode = productCode,
+                ProductName = productName,
+                Qty = qty,
+                UnitId = unitId
+            };
+            return View(viewModel);
+
         }
         [HttpPost]
         public IActionResult AddProduct(ProductViewModel model, [FromServices] IAddProductAppService addProductAppService)

@@ -41,9 +41,12 @@
         }
         public void DeleteProduct(int id)
         {
-            var row = productDbContext.Products.Where(c => c.Id == id).Select(c => c).ToList();
-            productDbContext.Remove(row);
-
+            var row = productDbContext.Products.Where(c => c.Id == id).Select(c => c).FirstOrDefault();
+            if (row != null)
+            {
+                productDbContext.Remove(row);
+                productDbContext.SaveChanges();
+            }
         }
     }
 }

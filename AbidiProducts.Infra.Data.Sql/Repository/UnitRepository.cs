@@ -36,8 +36,21 @@ namespace AbidiProducts.Models
         }
         public void DeleteUnit(int id)
         {
-            var raw = productDbContext.Units.Where(c => c.Id == id).Select(c=>c).ToList();
-            productDbContext.Remove(raw);
+            var raw = productDbContext.Units.Where(c => c.Id == id).Select(c=>c).FirstOrDefault();
+            try
+            {
+                if (raw != null && productDbContext.Products.Where(c => c.UnitId == id).Select(c=>c.UnitId).FirstOrDefault() != raw.Id)
+                {
+                    productDbContext.Remove(raw);
+                    productDbContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw new ApplicationException("امکان حذف این واحد وجود ندارد");
+            }
+ 
         }
        
     }
