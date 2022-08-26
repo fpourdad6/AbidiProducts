@@ -24,13 +24,10 @@ namespace AbidiProducts.Models
           productDbContext.Units.Select(c => c.UnitName).ToList();
 
         [HttpPut]
-        public void UpdateUnit(int id)
+        public void UpdateUnit(int id,string unitName)
         {
-            var x = productDbContext.Units.Where(c => c.Id == id).Select(c => c).First();
-            var entity = new Unit
-            {
-                UnitName = x.UnitName,
-            };
+            var entity = productDbContext.Units.Where(c => c.Id == id).Select(c => c).First();
+            entity.UnitName = unitName;
             productDbContext.Units.Update(entity);
             productDbContext.SaveChanges();
         }

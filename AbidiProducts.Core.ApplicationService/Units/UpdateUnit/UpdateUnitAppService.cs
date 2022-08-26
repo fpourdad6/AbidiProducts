@@ -18,7 +18,7 @@ namespace AbidiProducts.Core.ApplicationService.Units.UpdateUnit
         }
         public void Execute(UpdateUnitRequestDto updateUnitRequestDto)
         {
-            unitRepository.UpdateUnit(updateUnitRequestDto.Id);
+            unitRepository.UpdateUnit(updateUnitRequestDto.Id,updateUnitRequestDto.UnitName);
         }
     }
 }

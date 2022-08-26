@@ -1,8 +1,6 @@
 ﻿@model UnitViewModel;
 @{
     ViewData["Title"] = "افزودن واحد";
-    @Html.Partial("_UnitPartialView")
-    ;
     var listOfUnit = ViewBag.unitList as IEnumerable<Unit>;
 }
 
@@ -17,6 +15,22 @@
 </head>
 
 <body dir="rtl">
+
+    <div class="modal fade" id="unitModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        </div>
+    </div>
+
+    <div class="card border-0 shadow">
+            <div class="card-header bg-transparent d-flex align-items-center justify-content-between">
+                <h1>واحدها</h1>
+                <button type="button" class="btn btn-success add-btn">
+                    افزودن واحد
+                </button>
+            </div>
+        </div>
+
+
     <div asp-validation-summary="All"></div>
     <div class="container col-md-6">
         <div class="row">
@@ -25,36 +39,24 @@
                     <tr>
                         <th>نام واحد</th>
                         <th colspan="2">عملیات</th>
-                      </tr>
+                    </tr>
                 </thead>
                 <tbody>
-                    @*@foreach (var item in Model.Items)
-                    {
-                        <tr>
-                            <td>@item.UnitName</td>
-                            <td>
-                                <form asp-action="DeleteUnit" asp-controller="Unit" method="post">
-                                    <input type="hidden" name="id" value="@item.Id">
-                                    <input type="submit" value="حذف" class="btn btn-danger">
-                                </form>
-                            </td>
-                        </tr>
-                    }
-*@
                     @foreach (var item in listOfUnit)
                     {
                         <tr class="col-md-7">
                             <td class="col-md-2">@item.UnitName</td>
                             <td class="col-md-3">
                                 <form asp-action="UpdateUnit" asp-controller="Unit" method="post">
-                                    <input type="hidden" name="id" value="@item.Id">
-                                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#unitModal">
-                                    ویرایش
+                                    <button type="button" class="btn btn-primary edit-btn">
+                                        ویرایش
                                     </button>
+                                    <input type="hidden" name="id" value="@item.Id">
+
                                 </form>
                             </td>
                             <td class="col-md-3">
-                                 <form asp-action="DeleteUnit" asp-controller="Unit" method="post">
+                                <form asp-action="DeleteUnit" asp-controller="Unit" method="post">
                                     <input type="hidden" name="id" value="@item.Id">
                                     <input type="submit" value="حذف" class="btn btn-danger col-md-6">
                                 </form>
@@ -68,5 +70,23 @@
 
         </div>
     </div>
+
+    <script>
+        $('.edit-btn').on('click', (e) => {
+            const unitId = $(e.target).closest('td').find('input[type=hidden]').val();
+            $.get('Unit/CreateEdit?id=' + unitId).done((d) => {
+                $('#unitModal').find(".modal-dialog").html(d);  
+                    $('#unitModal').modal("show"); 
+            })
+        })
+
+        $('.add-btn').on('click', (e) => {
+            $.get('Unit/CreateEdit').done((d) => {
+                $('#unitModal').find(".modal-dialog").html(d);  
+                    $('#unitModal').modal("show"); 
+            })
+            
+        })
+    </script>
 </body>
 </html>

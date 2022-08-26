@@ -9,5 +9,6 @@ namespace AbidiProducts.Core.ApplicationService.Units.UpdateUnit.Dtos
     public class UpdateUnitRequestDto
     {
         public int Id { get; set; }
+        public string UnitName { get; set; }
     }
 }

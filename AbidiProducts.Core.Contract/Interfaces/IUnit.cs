@@ -4,7 +4,7 @@
     {
         void AddUnit(string unitName);
         List<string> GetAllUnits();
-        void UpdateUnit(int id);
+        void UpdateUnit(int Id,string unitName);
         void DeleteUnit(int id);
     }
 }
