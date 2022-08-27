@@ -22,13 +22,13 @@
     </div>
 
     <div class="card border-0 shadow">
-            <div class="card-header bg-transparent d-flex align-items-center justify-content-between">
-                <h1>واحدها</h1>
-                <button type="button" class="btn btn-success add-btn">
-                    افزودن واحد
-                </button>
-            </div>
+        <div class="card-header bg-transparent d-flex align-items-center justify-content-between">
+            <h1>واحدها</h1>
+            <button type="button" class="btn btn-success add-btn">
+                افزودن واحد
+            </button>
         </div>
+    </div>
 
 
     <div asp-validation-summary="All"></div>
@@ -47,13 +47,11 @@
                         <tr class="col-md-7">
                             <td class="col-md-2">@item.UnitName</td>
                             <td class="col-md-3">
-                                <form asp-action="UpdateUnit" asp-controller="Unit" method="post">
-                                    <button type="button" class="btn btn-primary edit-btn">
-                                        ویرایش
-                                    </button>
-                                    <input type="hidden" name="id" value="@item.Id">
+                                <button type="button" class="btn btn-primary edit-btn">
+                                    ویرایش
+                                </button>
+                                <input type="hidden" name="id" value="@item.Id">
 
-                                </form>
                             </td>
                             <td class="col-md-3">
                                 <form asp-action="DeleteUnit" asp-controller="Unit" method="post">
@@ -71,22 +69,25 @@
         </div>
     </div>
 
-    <script>
+</body>
+</html>
+@section Scripts{
+    <script type="text/javascript">
         $('.edit-btn').on('click', (e) => {
             const unitId = $(e.target).closest('td').find('input[type=hidden]').val();
-            $.get('Unit/CreateEdit?id=' + unitId).done((d) => {
-                $('#unitModal').find(".modal-dialog").html(d);  
-                    $('#unitModal').modal("show"); 
+            $.get('Unit/CreateEditUnit?id=' + unitId).done((d) => {
+                $('#unitModal').find(".modal-dialog").html(d);
+                $('#unitModal').modal("show");
             })
         })
 
         $('.add-btn').on('click', (e) => {
-            $.get('Unit/CreateEdit').done((d) => {
-                $('#unitModal').find(".modal-dialog").html(d);  
-                    $('#unitModal').modal("show"); 
+            $.get('Unit/CreateEditUnit').done((d) => {
+                $('#unitModal').find(".modal-dialog").html(d);
+                $('#unitModal').modal("show");
             })
-            
+
         })
     </script>
-</body>
-</html>
+}
+

@@ -1,4 +1,6 @@
-﻿namespace AbidiProducts.Models
+﻿using Microsoft.Data.SqlClient;
+
+namespace AbidiProducts.Models
 {
     public class ProductRepository:IProductRepository
     {
@@ -10,34 +12,59 @@
         }
         public void AddProduct(string productCode,string productName,int qty,int unitId)
         {
-            
-            var entity = new Product
+            var pc = productDbContext.Products.Where(x => x.ProductCode == productCode && x.ProductName == productName).FirstOrDefault();
+            try
             {
-                ProductCode = productCode,
-                ProductName = productName,
-                Qty = qty,
-                UnitId = unitId
-            };
-            productDbContext.Products.Add(entity);
-            productDbContext.SaveChanges();
-            
+                if (pc == null)
+                {
+                    var entity = new Product
+                    {
+                        ProductCode = productCode,
+                        ProductName = productName,
+                        Qty = qty,
+                        UnitId = unitId
+                    };
+                    productDbContext.Products.Add(entity);
+                    productDbContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw new ApplicationException("کالا با این مشخصات موجود می باشد");
+            }
+
         }
         public List<Product> GetProducts()
         {
             return productDbContext.Products.Select(c=>c).ToList();
         }
-        public void UpdateProduct(int id)
+        public void UpdateProduct(int id,string productCode, string productName, int qty, int unitId)
         {
-            var x = productDbContext.Products.Where(c => c.Id == id).Select(c=>c).First();
-            var entity = new Product
+            try
             {
-                ProductCode = x.ProductCode,
-                ProductName = x.ProductName,
-                Qty = x.Qty,
-                UnitId = x.UnitId
-            };
-            productDbContext.Products.Update(entity);
-            productDbContext.SaveChanges();
+                var pc = productDbContext.Products.FirstOrDefault(x => x.Id == id);
+                if (pc != null)
+                {
+                    pc.ProductCode = productCode;
+                    pc.ProductName = productName;
+                    pc.Qty = qty;
+                    pc.UnitId = unitId;
+                    productDbContext.Products.Update(pc);
+                    productDbContext.SaveChanges();
+                }
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("IX_Product_Code"))
+                {
+                    throw new ApplicationException("کد کالا تکراری است");
+                }
+                if (ex.Message.Contains("IX_Product_Name"))
+                {
+                    throw new ApplicationException("نام کالا تکراری است");
+                }
+            }
         }
         public void DeleteProduct(int id)
         {

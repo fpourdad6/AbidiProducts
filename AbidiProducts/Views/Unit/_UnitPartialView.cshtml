@@ -1,56 +1,29 @@
 ﻿@model UnitViewModel;
 
 @{
-    ViewData["Title"] = "افزودن واحد";
+    ViewData["Title"] = "افزودن/ویرایش واحد";
 }
-<html dir="rtl">
-<head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-</head>
 
-<body dir="rtl">
-   <div class="container mt-2">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">افزودن واحد</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form method="post" asp-action="CreateEditUnit" asp-controller="Unit">
+        <div class="modal-body">
+            <div class="form-group">
+                <input type="hidden" name="id" asp-for="Id">
 
-        <div class="card border-0 shadow">
-            <div class="card-header bg-transparent d-flex align-items-center justify-content-between">
-                <h1>واحدها</h1>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#unitModal">
-                    افزودن واحد
-                </button>
+                <label class="form-label" asp-for="UnitName">نام واحد</label>
+                <input class="form-control" type="text" asp-for="UnitName" required />
             </div>
         </div>
-
-        <form method="post" asp-action="Index" asp-controller="Unit">
-            <div asp-validation-summary="All"></div>
-            <div class="modal fade" id="unitModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">افزودن واحد</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label class="form-label" asp-for="UnitName">نام واحد</label>
-                                <input class="form-control" type="text" asp-for="UnitName" required/>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-                            <button id="unitSubmit" type="submit" class="btn btn-primary" asp-action="CreateEdit" asp-controller="Unit">ذخیره</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
- </body>
-</html>
-
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+            <input type="hidden" name="id" value="Id">
+            <button id="unitSubmit" type="submit" class="btn btn-primary" asp-action="CreateEditUnit" asp-controller="Unit">ذخیره</button>
+        </div>
+    </form>
+</div>
 

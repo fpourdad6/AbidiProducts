@@ -1,4 +1,5 @@
 using AbidiProducts.Core.ApplicationService.Products.AddProduct;
+using AbidiProducts.Core.ApplicationService.Products.UpdateProduct;
 using AbidiProducts.Core.ApplicationService.Units.AddUnit;
 using AbidiProducts.Core.ApplicationService.Units.UpdateUnit;
 using AbidiProducts.Models;
@@ -13,6 +14,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitRepository, UnitRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IAddProductAppService, AddProductAppService>();
+builder.Services.AddScoped<IUpdateProductAppService, UpdateProductAppService>();
 builder.Services.AddScoped<IAddUnitAppService, AddUnitAppService>();
 builder.Services.AddScoped<IUpdateUnitAppService, UpdateUnitAppService>();
 var app = builder.Build();

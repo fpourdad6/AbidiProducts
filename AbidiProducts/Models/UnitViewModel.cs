@@ -10,9 +10,5 @@ namespace AbidiProducts.Models
         public int Id { get; set; }
         [Required]
         public string UnitName { get; set; }
-        private List<Unit> _item = new();
-        public IEnumerable<Unit> Items => _item;
-
-
     }
 }

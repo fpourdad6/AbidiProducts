@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace AbidiProducts.Migrations
+namespace AbidiProducts.Infra.Data.Sql.Migrations
 {
     public partial class init : Migration
     {
@@ -14,7 +14,7 @@ namespace AbidiProducts.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UnitName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UnitName = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,13 +44,13 @@ namespace AbidiProducts.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductCode",
+                name: "IX_Product_Code",
                 table: "Products",
                 column: "ProductCode",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductName",
+                name: "IX_Product_Name",
                 table: "Products",
                 column: "ProductName",
                 unique: true);
@@ -59,6 +59,13 @@ namespace AbidiProducts.Migrations
                 name: "IX_Products_UnitId",
                 table: "Products",
                 column: "UnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Unit_Name",
+                table: "Units",
+                column: "UnitName",
+                unique: true,
+                filter: "[UnitName] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

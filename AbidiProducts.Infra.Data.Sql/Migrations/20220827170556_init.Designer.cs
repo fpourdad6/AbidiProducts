@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AbidiProducts.Migrations
+namespace AbidiProducts.Infra.Data.Sql.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20220821191436_init")]
+    [Migration("20220827170556_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,13 +47,13 @@ namespace AbidiProducts.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductCode")
-                        .IsUnique();
-
-                    b.HasIndex("ProductName")
-                        .IsUnique();
-
                     b.HasIndex("UnitId");
+
+                    b.HasIndex(new[] { "ProductCode" }, "IX_Product_Code")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "ProductName" }, "IX_Product_Name")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -67,10 +67,13 @@ namespace AbidiProducts.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("UnitName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "UnitName" }, "IX_Unit_Name")
+                        .IsUnique()
+                        .HasFilter("[UnitName] IS NOT NULL");
 
                     b.ToTable("Units");
                 });

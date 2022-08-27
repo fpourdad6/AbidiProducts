@@ -2,8 +2,9 @@
 
 namespace AbidiProducts.Models
 {
-    [Index(nameof(ProductCode), IsUnique = true)]
-    [Index(nameof(ProductName), IsUnique = true)]
+    [Index(nameof(ProductCode),Name ="IX_Product_Code", IsUnique = true)]
+    [Index(nameof(ProductName),Name ="IX_Product_Name", IsUnique = true)]
+
     public class Product
     {
         public int Id { get; set; }

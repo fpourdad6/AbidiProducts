@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.Data.SqlClient;
+using System.Web.Mvc;
 
 namespace AbidiProducts.Models
 {
@@ -13,12 +14,25 @@ namespace AbidiProducts.Models
 
         public void AddUnit(string unitName)
         {
-            var entity = new Unit
+            var exist = productDbContext.Units.Where(x => x.UnitName == unitName).FirstOrDefault();
+            try
             {
-                UnitName = unitName
-            };
-            productDbContext.Units.Add(entity);
-            productDbContext.SaveChanges();
+                if (exist == null)
+                {
+                    var entity = new Unit
+                    {
+                        UnitName = unitName
+                    };
+                    productDbContext.Units.Add(entity);
+                    productDbContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw new ApplicationException("این واحد تکراری می باشد");
+            }
+            
         }
         public List<string> GetAllUnits() =>
           productDbContext.Units.Select(c => c.UnitName).ToList();
@@ -26,10 +40,23 @@ namespace AbidiProducts.Models
         [HttpPut]
         public void UpdateUnit(int id,string unitName)
         {
-            var entity = productDbContext.Units.Where(c => c.Id == id).Select(c => c).First();
-            entity.UnitName = unitName;
-            productDbContext.Units.Update(entity);
-            productDbContext.SaveChanges();
+            try
+            {
+                var unit = productDbContext.Units.FirstOrDefault(x => x.Id == id);
+                if (unit != null)
+                {
+                    unit.UnitName = unitName;
+                    productDbContext.Units.Update(unit);
+                    productDbContext.SaveChanges();
+                }
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("IX_Unit_Name"))
+                {
+                    throw new ApplicationException("نام واحد تکراری است");
+                }
+            }
         }
         public void DeleteUnit(int id)
         {

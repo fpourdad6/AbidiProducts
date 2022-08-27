@@ -18,7 +18,11 @@ namespace AbidiProducts.Core.ApplicationService.Products.UpdateProduct
         }
         public void Execute(UpdateProductRequestDto updateProductRequestDto)
         {
-            _productRepository.UpdateProduct(updateProductRequestDto.Id);
+            _productRepository.UpdateProduct(updateProductRequestDto.Id,
+                updateProductRequestDto.ProductCode,
+                updateProductRequestDto.ProductName,
+                updateProductRequestDto.Qty,
+                updateProductRequestDto.UnitId);
         }
     }
 }

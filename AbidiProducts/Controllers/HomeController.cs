@@ -1,5 +1,7 @@
 ﻿using AbidiProducts.Core.ApplicationService.Products.AddProduct;
 using AbidiProducts.Core.ApplicationService.Products.AddProduct.Dtos;
+using AbidiProducts.Core.ApplicationService.Products.UpdateProduct;
+using AbidiProducts.Core.ApplicationService.Products.UpdateProduct.Dtos;
 using AbidiProducts.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -12,13 +14,12 @@ namespace AbidiProducts.Controllers
         private readonly IProductRepository _productRepo;
         private readonly IUnitRepository _unitRepository;
 
-        public HomeController(ProductDbContext productDbContext,IProductRepository productRepo,IUnitRepository unitRepository)
+        public HomeController(ProductDbContext productDbContext, IProductRepository productRepo, IUnitRepository unitRepository)
         {
             this._productDbContext = productDbContext;
             this._productRepo = productRepo;
             this._unitRepository = unitRepository;
         }
-        [HttpGet]
         public IActionResult Index()
         {
             var units = _productDbContext.Units.ToList();
@@ -27,43 +28,67 @@ namespace AbidiProducts.Controllers
             ViewBag.Products = products;
             return View();
         }
-
-        [HttpPost]
-        public ActionResult Index(string productCode,string productName ,int qty ,int unitId) //ذخیره سازی اطلاعات
-        {
-            var viewModel = new ProductViewModel
-            {
-                ProductCode = productCode,
-                ProductName = productName,
-                Qty = qty,
-                UnitId = unitId
-            };
-            return View(viewModel);
-
-        }
-        [HttpPost]
-        public IActionResult AddProduct(ProductViewModel model, [FromServices] IAddProductAppService addProductAppService)
-        {
-            var requestDto = new AddProductRequestDto()
-            {
-                ProductCode = model.ProductCode,
-                ProductName = model.ProductName,
-                Qty = model.Qty,
-                UnitId = model.UnitId
-            };
-
-            addProductAppService.Execute(requestDto);
-            return Redirect("Index");
-        }
-        [HttpPut]
-        public IActionResult UpdateProduct(Product product)
-        {
-            return Redirect("Index");
-        }
         public IActionResult DeleteProduct(int id)
         {
             _productRepo.DeleteProduct(id);
-            return Redirect("Index");
+            return RedirectToAction("Index");
+        }
+        public IActionResult CreateEditProduct(int? id)
+        {
+            var dto = new ProductViewModel
+            {
+                Id = id ?? -1
+            };
+
+            if (id != null)
+            {
+                var products = _productDbContext.Products.Where(c => c.Id == id).Select(c => c).First();
+                dto = new ProductViewModel
+                {
+                    Id = products.Id,
+                    ProductCode = products.ProductCode,
+                    ProductName = products.ProductName,
+                    Qty = products.Qty,
+                    UnitId = products.UnitId
+                };
+            }
+            var units = _productDbContext.Units.ToList();
+            ViewBag.subGroupNameList = units;
+            return PartialView("_CreateEditProduct", dto);
+        }
+
+        [HttpPost]
+        public IActionResult CreateEditProduct(ProductViewModel model, [FromServices] IAddProductAppService addProductAppService, [FromServices] IUpdateProductAppService updateProductAppService)
+        {
+            if (model.Id <= 0)
+            {
+                var requestDto = new AddProductRequestDto()
+                {
+                    ProductCode = model.ProductCode,
+                    ProductName = model.ProductName,
+                    Qty = model.Qty,
+                    UnitId = model.UnitId
+                };
+                addProductAppService.Execute(requestDto);
+            }
+            else if (model.Id > 0)
+            {
+                var requestDto = new UpdateProductRequestDto()
+                {
+                    Id = model.Id,
+                    ProductCode = model.ProductCode,
+                    ProductName = model.ProductName,
+                    Qty = model.Qty,
+                    UnitId = model.UnitId
+                };
+
+                updateProductAppService.Execute(requestDto);
+            }
+            var units = _productDbContext.Units.ToList();
+            ViewBag.subGroupNameList = units;
+            var products = _productDbContext.Products.ToList();
+            ViewBag.Products = products;
+            return RedirectToAction("Index");
         }
     }
 }
